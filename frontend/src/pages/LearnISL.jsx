@@ -5,7 +5,7 @@ import "./learnISL.css";
 /**
  * LearnISL Component
  * Educational page for learning ISL gestures
- * Matches the new Samvaad design system with glassmorphism & gradients
+ * Reuses App.css styling - minimal CSS override only
  */
 
 export default function LearnISL() {
@@ -278,18 +278,16 @@ export default function LearnISL() {
 
   // ==================== Render Component ====================
   return (
-    <div className="learn-isl-wrapper">
-      {/* HEADER */}
-      <section className="learn-header-section">
-        <div className="learn-header-container">
-          <h1 className="learn-title">📚 Learn Indian Sign Language</h1>
-          <p className="learn-subtitle">Master ISL gestures with interactive practice and real-time feedback</p>
+    <div className="learn-wrapper">
+      {/* HEADER - Using hero-header pattern */}
+      <section className="hero">
+        <div className="hero-header">
+          <h2 className="hero-title">📚 Learn Indian Sign Language</h2>
+          <p className="hero-subtitle">Master ISL gestures with interactive practice and real-time feedback</p>
         </div>
-      </section>
 
-      {/* TABS */}
-      <section className="learn-tabs-section">
-        <div className="learn-tabs-container">
+        {/* TABS - Using section-title pattern for styling */}
+        <div className="learn-tabs">
           <button
             className={`learn-tab-btn ${activeTab === "library" ? "learn-tab-active" : ""}`}
             onClick={() => setActiveTab("library")}
@@ -309,31 +307,30 @@ export default function LearnISL() {
             📊 My Progress
           </button>
         </div>
-      </section>
 
-      {/* CONTENT */}
-      <section className="learn-content-section">
         {/* TAB 1: LIBRARY */}
         {activeTab === "library" && (
-          <div className="learn-page">
-            <div className="library-intro">
-              <h2>Explore Our Gesture Collection</h2>
-              <p>Search, filter, and learn from {filteredGestures.length} available gestures</p>
+          <div className="learn-content">
+            <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+              <p style={{ fontSize: "1.1rem", color: "#64748B" }}>
+                Search, filter, and learn from {filteredGestures.length} available gestures
+              </p>
             </div>
 
-            <div className="library-controls">
+            <div className="learn-controls">
               <input
                 type="text"
-                className="library-search"
+                className="select-language"
                 placeholder="🔍 Search gestures... (e.g., 'Hello', 'धन्यवाद')"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ flex: 1, minWidth: "250px" }}
               />
-              <div className="category-filters">
+              <div className="learn-categories">
                 {categories.map((cat) => (
                   <button
                     key={cat}
-                    className={`category-btn ${selectedCategory === cat ? "category-active" : ""}`}
+                    className={`learn-category-btn ${selectedCategory === cat ? "learn-category-active" : ""}`}
                     onClick={() => setSelectedCategory(cat)}
                   >
                     {cat}
@@ -342,51 +339,64 @@ export default function LearnISL() {
               </div>
             </div>
 
-            <div className="gestures-grid">
+            <div className="how-cards">
               {filteredGestures.length === 0 ? (
                 <div className="empty-state">
                   <p>😕 No gestures found. Try a different search!</p>
                 </div>
               ) : (
                 filteredGestures.map((gesture) => (
-                  <div key={gesture.id} className="gesture-card">
-                    <div className="gesture-header">
-                      <h3 className="gesture-name">{gesture.name}</h3>
-                      <p className="gesture-hindi">{gesture.hindi}</p>
+                  <div key={gesture.id} className="how-card">
+                    <div style={{ textAlign: "left", marginBottom: "1rem" }}>
+                      <h3 style={{ margin: 0, fontSize: "1.3rem", color: "#1B6EEB" }}>
+                        {gesture.name}
+                      </h3>
+                      <p style={{ margin: "0.25rem 0 0 0", color: "#64748B", fontWeight: 500 }}>
+                        {gesture.hindi}
+                      </p>
                     </div>
 
-                    <div className="gesture-badges">
-                      <span className={`badge difficulty-${gesture.difficulty.toLowerCase()}`}>
+                    <div className="learn-badges">
+                      <span className={`learn-badge difficulty-${gesture.difficulty.toLowerCase()}`}>
                         {gesture.difficulty}
                       </span>
-                      <span className="badge category">{gesture.category}</span>
+                      <span className="learn-badge category">{gesture.category}</span>
                     </div>
 
-                    <p className="gesture-desc">{gesture.description}</p>
+                    <p style={{ fontSize: "0.95rem", color: "#475569", lineHeight: "1.6", margin: 0 }}>
+                      {gesture.description}
+                    </p>
 
-                    <div className="gesture-tips">
-                      <strong>💡 How to perform:</strong>
-                      <ul>
+                    <div className="learn-tips">
+                      <strong style={{ color: "#1B6EEB" }}>💡 How to perform:</strong>
+                      <ul style={{ margin: "0.5rem 0 0 1.5rem", paddingLeft: 0, fontSize: "0.85rem", color: "#475569" }}>
                         {gesture.tips.map((tip, idx) => (
-                          <li key={idx}>{tip}</li>
+                          <li key={idx} style={{ marginBottom: "0.25rem" }}>
+                            {tip}
+                          </li>
                         ))}
                       </ul>
                     </div>
 
                     {gesture.similar_to.length > 0 && (
-                      <div className="gesture-similar">
-                        <strong>Similar:</strong> {gesture.similar_to.join(", ")}
-                      </div>
+                      <p style={{ fontSize: "0.85rem", color: "#64748B", margin: "0.5rem 0 0 0" }}>
+                        <strong style={{ color: "#1B6EEB" }}>Similar:</strong> {gesture.similar_to.join(", ")}
+                      </p>
                     )}
 
-                    <div className="gesture-actions">
+                    <div style={{ display: "flex", gap: "0.75rem", marginTop: "1rem" }}>
                       <button
-                        className="btn-gesture-learn"
+                        className="btn-primary"
                         onClick={() => speak(`${gesture.name}. ${gesture.description}`, "en")}
+                        style={{ flex: 1, padding: "0.75rem 1rem", fontSize: "0.9rem" }}
                       >
                         🔊 Learn
                       </button>
-                      <button className="btn-gesture-practice" onClick={() => startPractice(gesture)}>
+                      <button
+                        className="btn-primary"
+                        onClick={() => startPractice(gesture)}
+                        style={{ flex: 1, padding: "0.75rem 1rem", fontSize: "0.9rem" }}
+                      >
                         🎯 Practice
                       </button>
                     </div>
@@ -399,42 +409,61 @@ export default function LearnISL() {
 
         {/* TAB 2: PRACTICE */}
         {activeTab === "practice" && (
-          <div className="learn-page">
+          <div className="learn-content">
             {!showPracticeModal ? (
-              <div className="practice-intro-box">
-                <h2>🎯 Practice Mode</h2>
-                <p>Learn by doing! Select a gesture from the library to start practicing.</p>
-                <div className="practice-steps">
-                  <div className="practice-step">
-                    <div className="step-num">1</div>
-                    <p><strong>Choose</strong> a gesture from the library</p>
+              <div className="how-card" style={{ textAlign: "center", padding: "3rem 2rem" }}>
+                <h2 className="hero-title" style={{ margin: "0 0 1rem 0", fontSize: "2rem" }}>
+                  🎯 Practice Mode
+                </h2>
+                <p className="hero-subtitle" style={{ margin: "0 0 2rem 0" }}>
+                  Learn by doing! Select a gesture from the library to start practicing.
+                </p>
+                <div className="how-cards">
+                  <div className="how-card" style={{ textAlign: "center" }}>
+                    <div className="how-icon">1️⃣</div>
+                    <h3 style={{ fontSize: "1rem", fontWeight: 600, color: "#111827" }}>Choose</h3>
+                    <p style={{ fontSize: "0.9rem", color: "#64748B", margin: 0 }}>Select a gesture from the library</p>
                   </div>
-                  <div className="practice-step">
-                    <div className="step-num">2</div>
-                    <p><strong>Read</strong> the description carefully</p>
+                  <div className="how-card" style={{ textAlign: "center" }}>
+                    <div className="how-icon">2️⃣</div>
+                    <h3 style={{ fontSize: "1rem", fontWeight: 600, color: "#111827" }}>Read</h3>
+                    <p style={{ fontSize: "0.9rem", color: "#64748B", margin: 0 }}>Read the description carefully</p>
                   </div>
-                  <div className="practice-step">
-                    <div className="step-num">3</div>
-                    <p><strong>Perform</strong> the gesture in front of camera</p>
-                  </div>
-                  <div className="practice-step">
-                    <div className="step-num">4</div>
-                    <p><strong>Get</strong> real-time accuracy feedback</p>
+                  <div className="how-card" style={{ textAlign: "center" }}>
+                    <div className="how-icon">3️⃣</div>
+                    <h3 style={{ fontSize: "1rem", fontWeight: 600, color: "#111827" }}>Perform</h3>
+                    <p style={{ fontSize: "0.9rem", color: "#64748B", margin: 0 }}>Perform the gesture in front of camera</p>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="practice-session">
-                <button className="btn-close-practice" onClick={() => setShowPracticeModal(false)}>
-                  ✕ Close
+              <div className="camera-section" style={{ padding: "2rem", position: "relative" }}>
+                <button
+                  onClick={() => setShowPracticeModal(false)}
+                  style={{
+                    position: "absolute",
+                    top: "1rem",
+                    right: "1rem",
+                    background: "rgba(27, 110, 235, 0.1)",
+                    border: "1px solid rgba(27, 110, 235, 0.2)",
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    fontSize: "1.2rem",
+                    cursor: "pointer",
+                    color: "#1B6EEB",
+                    fontWeight: "bold",
+                  }}
+                >
+                  ✕
                 </button>
 
-                <div className="practice-layout">
+                <div className="hero-dashboard">
                   {/* CAMERA */}
-                  <div className="practice-camera-area">
-                    <div className="camera-header">
-                      <h3>Your Camera</h3>
-                      <span className={`practice-status ${practiceStatus}`}>
+                  <div>
+                    <div className="camera-status-bar">
+                      <span className={`status-dot ${practiceStatus === "success" ? "status-live" : practiceStatus === "fail" ? "status-off" : "status-live"}`} />
+                      <span className="status-text">
                         {practiceStatus === "ready" && "📍 Ready"}
                         {practiceStatus === "detecting" && "🔍 Detecting..."}
                         {practiceStatus === "success" && "✅ Great!"}
@@ -442,82 +471,94 @@ export default function LearnISL() {
                       </span>
                     </div>
 
-                    <div className="practice-camera-feed">
+                    <div className="camera-feed">
                       {isPracticeCameraOn ? (
                         <Webcam
                           ref={webcamRef}
                           screenshotFormat="image/jpeg"
-                          className="practice-webcam"
+                          className="webcam"
                           videoConstraints={{ facingMode: "user", width: 640, height: 480 }}
                         />
                       ) : (
-                        <div className="practice-camera-placeholder">
-                          <div className="practice-camera-icon">📷</div>
+                        <div className="camera-placeholder">
+                          <div className="camera-placeholder-icon">📷</div>
                           <p>Camera is off</p>
                         </div>
                       )}
                     </div>
 
                     <button
-                      className={`btn-camera-toggle ${isPracticeCameraOn ? "btn-camera-on" : ""}`}
+                      className="btn-primary"
                       onClick={() => setIsPracticeCameraOn((s) => !s)}
+                      style={{ width: "100%", marginTop: "1rem" }}
                     >
                       {isPracticeCameraOn ? "🎥 Stop Camera" : "📷 Start Camera"}
                     </button>
                   </div>
 
                   {/* FEEDBACK */}
-                  <div className="practice-feedback-area">
-                    <div className="practice-target-box">
-                      <h3>Target Gesture</h3>
-                      <div className="target-name">{selectedGesture?.name}</div>
-                      <div className="target-hindi">{selectedGesture?.hindi}</div>
-                      <p className="target-desc">{selectedGesture?.description}</p>
-
-                      <div className="target-tips">
-                        <strong>Remember:</strong>
-                        <ul>
-                          {selectedGesture?.tips.map((tip, idx) => (
-                            <li key={idx}>{tip}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div className="practice-feedback-box">
-                      <h3>Your Performance</h3>
-
-                      <div className="feedback-row">
-                        <label>Detected:</label>
-                        <div className="feedback-value">{practiceGesture || "—"}</div>
-                      </div>
-
-                      <div className="feedback-row">
-                        <label>Accuracy:</label>
-                        <div className="feedback-accuracy">{practiceAccuracy}%</div>
-                      </div>
-
-                      <div className="accuracy-bar-wrapper">
-                        <div className="accuracy-bar-bg">
-                          <div className="accuracy-bar-fill" style={{ width: `${practiceAccuracy}%` }} />
+                  <div className="output-section">
+                    <div className="output-card">
+                      <div className="output-block">
+                        <label className="output-label">Target Gesture</label>
+                        <div className="output-raw" style={{ color: "#1B6EEB", textAlign: "center", fontSize: "1.4rem" }}>
+                          {selectedGesture?.name}
+                        </div>
+                        <div style={{ fontSize: "1rem", color: "#64748B", textAlign: "center" }}>
+                          {selectedGesture?.hindi}
                         </div>
                       </div>
 
-                      <div className="feedback-stats-grid">
-                        <div className="feedback-stat"><strong>Attempts:</strong> {attemptCount}</div>
-                        <div className="feedback-stat"><strong>Best:</strong> {bestAccuracy}%</div>
+                      <p style={{ fontSize: "0.95rem", color: "#475569", lineHeight: "1.6", margin: 0 }}>
+                        {selectedGesture?.description}
+                      </p>
+
+                      <div className="learn-tips">
+                        <strong style={{ color: "#1B6EEB" }}>Remember:</strong>
+                        <ul style={{ margin: "0.5rem 0 0 1.5rem", paddingLeft: 0, fontSize: "0.85rem", color: "#475569" }}>
+                          {selectedGesture?.tips.map((tip, idx) => (
+                            <li key={idx} style={{ marginBottom: "0.25rem" }}>
+                              {tip}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="output-divider" />
+
+                      <div className="output-block">
+                        <label className="output-label">Your Performance</label>
+                        <div className="output-raw">
+                          Accuracy: {practiceAccuracy}% | Attempts: {attemptCount} | Best: {bestAccuracy}%
+                        </div>
+                      </div>
+
+                      <div style={{ width: "100%", height: "8px", background: "rgba(100, 116, 139, 0.1)", borderRadius: "10px", overflow: "hidden" }}>
+                        <div
+                          style={{
+                            height: "100%",
+                            background: "linear-gradient(90deg, #1B6EEB, #06B6D4)",
+                            width: `${practiceAccuracy}%`,
+                            transition: "width 0.5s ease",
+                          }}
+                        />
                       </div>
 
                       {practiceStatus === "success" && (
-                        <div className="feedback-success">🎉 Perfect! Keep it up!</div>
+                        <p style={{ color: "#059669", textAlign: "center", fontWeight: "600", margin: "1rem 0 0 0" }}>
+                          🎉 Perfect! Keep it up!
+                        </p>
                       )}
                       {practiceStatus === "fail" && attemptCount > 0 && (
-                        <div className="feedback-fail">💪 Keep practicing!</div>
+                        <p style={{ color: "#dc2626", textAlign: "center", fontWeight: "600", margin: "1rem 0 0 0" }}>
+                          💪 Keep practicing!
+                        </p>
                       )}
 
                       <button
-                        className="btn-practice-audio"
+                        className="btn-play-output"
                         onClick={() => speak(selectedGesture?.description || "", "en")}
+                        style={{ marginTop: "1rem" }}
                       >
                         🔊 Hear Instructions
                       </button>
@@ -531,81 +572,81 @@ export default function LearnISL() {
 
         {/* TAB 3: PROGRESS */}
         {activeTab === "progress" && (
-          <div className="learn-page">
-            <h2 className="page-title">Your Learning Journey</h2>
+          <div className="learn-content">
+            <h2 className="section-title" style={{ fontSize: "2rem", marginBottom: "2rem" }}>
+              Your Learning Journey
+            </h2>
 
-            {/* STATS */}
-            <div className="progress-stats-grid">
-              <div className="progress-stat-card">
-                <div className="stat-icon">🎓</div>
-                <div className="stat-num">{userProgress.gestures_learned}/30</div>
-                <div className="stat-label">Gestures Learned</div>
+            <div className="how-cards">
+              <div className="how-card" style={{ textAlign: "center" }}>
+                <div className="how-icon">🎓</div>
+                <h3 style={{ fontSize: "1.6rem", color: "#1B6EEB", fontWeight: 700, margin: 0 }}>
+                  {userProgress.gestures_learned}/30
+                </h3>
+                <p style={{ fontSize: "0.9rem", color: "#64748B", margin: "0.5rem 0 0 0" }}>
+                  Gestures Learned
+                </p>
               </div>
-              <div className="progress-stat-card">
-                <div className="stat-icon">🏋️</div>
-                <div className="stat-num">{userProgress.practice_sessions}</div>
-                <div className="stat-label">Practice Sessions</div>
+              <div className="how-card" style={{ textAlign: "center" }}>
+                <div className="how-icon">🏋️</div>
+                <h3 style={{ fontSize: "1.6rem", color: "#1B6EEB", fontWeight: 700, margin: 0 }}>
+                  {userProgress.practice_sessions}
+                </h3>
+                <p style={{ fontSize: "0.9rem", color: "#64748B", margin: "0.5rem 0 0 0" }}>
+                  Practice Sessions
+                </p>
               </div>
-              <div className="progress-stat-card">
-                <div className="stat-icon">⭐</div>
-                <div className="stat-num">Level {userProgress.current_level}</div>
-                <div className="stat-label">Current Level</div>
-              </div>
-              <div className="progress-stat-card">
-                <div className="stat-icon">🎯</div>
-                <div className="stat-num">{userProgress.total_attempts}</div>
-                <div className="stat-label">Total Attempts</div>
-              </div>
-            </div>
-
-            {/* PROGRESS BAR */}
-            <div className="progress-bar-section">
-              <h3>Overall Progress</h3>
-              <div className="progress-bar-container">
-                <div className="progress-bar-background">
-                  <div
-                    className="progress-bar-indicator"
-                    style={{ width: `${(userProgress.gestures_learned / 30) * 100}%` }}
-                  />
-                </div>
-                <p className="progress-label">
-                  {userProgress.gestures_learned} of 30 gestures mastered ({Math.round((userProgress.gestures_learned / 30) * 100)}%)
+              <div className="how-card" style={{ textAlign: "center" }}>
+                <div className="how-icon">⭐</div>
+                <h3 style={{ fontSize: "1.6rem", color: "#1B6EEB", fontWeight: 700, margin: 0 }}>
+                  Level {userProgress.current_level}
+                </h3>
+                <p style={{ fontSize: "0.9rem", color: "#64748B", margin: "0.5rem 0 0 0" }}>
+                  Current Level
                 </p>
               </div>
             </div>
 
-            {/* ACHIEVEMENTS */}
-            <div className="achievements-section">
-              <h3>🏅 Achievements</h3>
-              <div className="achievements-grid">
-                {ACHIEVEMENTS.map((achievement) => {
-                  const unlocked = userProgress.achievements.includes(achievement.id);
-                  return (
-                    <div key={achievement.id} className={`achievement-item ${unlocked ? "unlocked" : "locked"}`}>
-                      <div className="achievement-icon">{achievement.icon}</div>
-                      <h4>{achievement.name}</h4>
-                      <p>{achievement.description}</p>
-                      {unlocked && <span className="unlock-badge">✓</span>}
-                    </div>
-                  );
-                })}
+            <div className="output-card" style={{ marginTop: "2rem" }}>
+              <label className="output-label">Progress Bar</label>
+              <div style={{ width: "100%", height: "20px", background: "rgba(100, 116, 139, 0.1)", borderRadius: "10px", overflow: "hidden", marginBottom: "1rem" }}>
+                <div
+                  style={{
+                    height: "100%",
+                    background: "linear-gradient(90deg, #1B6EEB, #06B6D4)",
+                    width: `${(userProgress.gestures_learned / 30) * 100}%`,
+                    transition: "width 0.5s ease",
+                  }}
+                />
               </div>
+              <p style={{ fontSize: "0.9rem", color: "#64748B", margin: 0 }}>
+                {userProgress.gestures_learned} of 30 gestures mastered ({Math.round((userProgress.gestures_learned / 30) * 100)}%)
+              </p>
             </div>
 
-            {/* RECOMMENDATIONS */}
-            <div className="recommendations-section">
-              <h3>💡 What's Next?</h3>
-              <div className="recommendations-grid">
-                <div className="rec-item">
-                  <p><strong>🎯 Next Goal:</strong> Master 2 more gestures to level up!</p>
-                </div>
-                <div className="rec-item">
-                  <p><strong>📚 Try Learning:</strong> Relations category (Family, Friend) next</p>
-                </div>
-                <div className="rec-item">
-                  <p><strong>⚡ Daily Challenge:</strong> Practice one gesture for 10 minutes</p>
-                </div>
-              </div>
+            <h2 className="section-title" style={{ fontSize: "1.5rem", marginTop: "2rem", marginBottom: "1rem" }}>
+              🏅 Achievements
+            </h2>
+            <div className="how-cards">
+              {ACHIEVEMENTS.map((achievement) => {
+                const unlocked = userProgress.achievements.includes(achievement.id);
+                return (
+                  <div key={achievement.id} className="how-card" style={{ opacity: unlocked ? 1 : 0.5, textAlign: "center" }}>
+                    <div className="how-icon">{achievement.icon}</div>
+                    <h3 style={{ fontSize: "1rem", fontWeight: 600, color: "#111827", margin: 0 }}>
+                      {achievement.name}
+                    </h3>
+                    <p style={{ fontSize: "0.85rem", color: "#64748B", margin: "0.5rem 0 0 0" }}>
+                      {achievement.description}
+                    </p>
+                    {unlocked && (
+                      <span style={{ fontSize: "0.8rem", color: "#FFD700", fontWeight: 700, marginTop: "0.5rem", display: "block" }}>
+                        ✓ Unlocked
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
