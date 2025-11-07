@@ -40,7 +40,6 @@ const App = () => {
       const data = await res.json();
       const latency = Math.round(performance.now() - t0);
 
-      // Only update if response is valid
       if (data.gesture) {
         setGesture(data.gesture);
         setTranslationEn(data.translation_en);
@@ -93,17 +92,17 @@ const App = () => {
     }
   }, [contextEn, speak]);
 
-  // ✅ Continuous capture loop every ~1.2 seconds (instead of 2s)
+  // ✅ Continuous capture loop every ~1.2 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       captureFrame();
-    }, 1200); // slightly faster but still safe
+    }, 1200);
     return () => clearInterval(interval);
   }, [captureFrame]);
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
-      <h1>🖐️ ISL Real-Time Translator (Optimized)</h1>
+      <h1>🖐 ISL Real-Time Translator (Optimized)</h1>
 
       <Webcam
         ref={webcamRef}
